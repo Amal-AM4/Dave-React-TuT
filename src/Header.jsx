@@ -1,13 +1,18 @@
 import React from 'react'
 
-function Header() {
+function Header({title}) {
   return (
     <header>
 
-        <h1>Shoping list</h1>
+        {/* <h1>{props.title}</h1> */}
+        <h1>{title}</h1>
       
     </header>
   )
+}
+
+Header.defaultProps = {
+  title: "Default Title"
 }
 
 export default Header
