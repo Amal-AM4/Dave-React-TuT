@@ -8,16 +8,28 @@ import AddItem from "./AddItem";
 import SearchItem from "./SearchItem";
 
 function App() {
-  const [items, setItems] = useState(
-    JSON.parse(localStorage.getItem("shoppinglist")) || []
-  );
+  const API_URL = "http://localhost:3500/items";
+
+  const [items, setItems] = useState([]);
 
   const [newItem, setNewItem] = useState("");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("shoppinglist", JSON.stringify(items));
-  }, [items]);
+    const fetchItems = async () => {
+      try {
+        const response = await fetch(API_URL);
+        const listItems = await response.json();
+        console.log(listItems);
+
+        setItems(listItems);
+      } catch (error) {
+        console.error(error.stack);
+      }
+    };
+
+    (async () => await fetchItems())();
+  }, []);
 
   const addItem = (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
