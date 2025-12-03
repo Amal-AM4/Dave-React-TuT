@@ -3,7 +3,7 @@
 import Header from "./Header";
 import Content from "./Content";
 import Footer from "./Footer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddItem from "./AddItem";
 import SearchItem from "./SearchItem";
 
@@ -14,6 +14,14 @@ function App() {
 
   const [newItem, setNewItem] = useState("");
   const [search, setSearch] = useState("");
+
+  console.log('before useEffect');
+
+  useEffect(() => {
+    console.log('inside useEffect');
+  }, [items])
+
+  console.log('after useEffect');
 
   const setAndSaveItems = (newItems) => {
     setItems(newItems);
