@@ -14,6 +14,7 @@ function App() {
   const [newItem, setNewItem] = useState("");
   const [search, setSearch] = useState("");
   const [fetchError, setFetchError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -27,10 +28,14 @@ function App() {
         setFetchError(null);
       } catch (error) {
         setFetchError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    (async () => await fetchItems())();
+    setTimeout(() => {
+      (async () => await fetchItems())();
+    }, 2000);
   }, []);
 
   const addItem = (item) => {
@@ -80,10 +85,17 @@ function App() {
       />
       <SearchItem search={search} setSearch={setSearch} />
       <main>
-        {fetchError && (
-          <p style={{ color: "crimson", paddingTop: "20px" }}>{`Error: ${fetchError}`}</p>
+        {isLoading && (
+          <p style={{ color: "royalblue", paddingTop: "20px" }}>
+            Loading Items...
+          </p>
         )}
-        {!fetchError && (
+        {fetchError && (
+          <p
+            style={{ color: "crimson", paddingTop: "20px" }}
+          >{`Error: ${fetchError}`}</p>
+        )}
+        {!fetchError && !isLoading && (
           <Content
             items={items.filter((item) =>
               item.item.toLowerCase().includes(search.toLocaleLowerCase())
