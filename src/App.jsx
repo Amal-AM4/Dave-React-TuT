@@ -39,10 +39,10 @@ function App() {
   }, []);
 
   const addItem = async (item) => {
-    const id = items.length ? items[items.length - 1].id + 1 : 1;
+    const id = items.length ? Number(items[items.length - 1].id) + 1 : 1;
 
     const myNewItem = {
-      id: Number(id),
+      id: id.toString(),
       checked: false,
       item: item,
     };
@@ -62,7 +62,7 @@ function App() {
     if (result) setFetchError(result);
   };
 
-  const handleCheck = (id) => {
+  const handleCheck = async (id) => {
     console.log(`key: ${id}`);
 
     const listItems = items.map((item) =>
@@ -70,13 +70,33 @@ function App() {
     );
 
     setItems(listItems);
+
+    const myItem = listItems.filter((item) => item.id === id);
+    const updateOptions = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ checked: myItem[0].checked }),
+    };
+
+    const reqUrl = `${API_URL}/${id.toString()}`;
+    const result = await apiRequest(reqUrl, updateOptions);
+
+    if (result) setFetchError(result);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     console.log(id);
 
     const listItems = items.filter((item) => item.id !== id);
     setItems(listItems);
+
+    const deleteOptions = { method: "DELETE" };
+    const reqUrl = `${API_URL}/${id.toString()}`;
+    const result = await apiRequest(reqUrl, deleteOptions);
+
+    if (result) setFetchError(result);
   };
 
   const handleSubmit = (e) => {
